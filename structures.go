@@ -1,4 +1,4 @@
-package main
+package mandrill
 
 import (
 	"net/http"
