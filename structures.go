@@ -79,12 +79,6 @@ type Message struct {
 	Attachments []*Attachment `json:"attachments,omitempty"`
 	// an array of embedded images to add to the message
 	Images []*Attachment `json:"images,omitempty"`
-	// enable a background sending mode that is optimized for bulk sending. In async mode, messages/send will immediately return a status of "queued" for every recipient. To handle rejections when sending in async mode, set up a webhook for the 'reject' event. Defaults to false for messages with no more than 10 recipients; messages with more than 10 recipients are always sent asynchronously, regardless of the value of async.
-	Async bool `json:"-"`
-	// the name of the dedicated ip pool that should be used to send the message. If you do not have any dedicated IPs, this parameter has no effect. If you specify a pool that does not exist, your default pool will be used instead.
-	IPPool string `json:"-"`
-	// when this message should be sent as a UTC timestamp in YYYY-MM-DD HH:MM:SS format. If you specify a time in the past, the message will be sent immediately. An additional fee applies for scheduled email, and this feature is only available to accounts with a positive balance.
-	SendAt string `json:"-"`
 }
 
 // To is a single recipient's information.
@@ -100,8 +94,8 @@ type To struct {
 
 // Variable is key/value data used throughout the Mandrill API
 type Variable struct {
-	Name    string      `json:"name"`
-	Content interface{} `json:"content"`
+	Name    string `json:"name"`
+	Content string `json:"content"`
 }
 
 // RcptMergeVars holds per-recipient merge variables
@@ -153,4 +147,18 @@ type Error struct {
 	Code    int    `json:"code"`
 	Name    string `json:"name"`
 	Message string `json:"message"`
+}
+
+type SendMessage struct {
+	Async   bool     `json:"async,omitempty"`
+	IPPool  string   `json:"ip_pool,omitempty"`
+	SendAt  string   `json:"send_at,omitempty"`
+	Key     string   `json:"key"`
+	Message *Message `json:"message,omitempty"`
+}
+
+type SendMessageTemplate struct {
+	SendMessage                 // Embeding SendMessageStruct
+	TemplateName    string      `json:"template_name"`
+	TemplateContent []*Variable `json:"template_content"`
 }
